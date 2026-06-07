@@ -1,0 +1,93 @@
+[
+  {
+    "english": "Echo Trail",
+    "chinese": "回声拖影",
+    "word": "ECHO TRAIL",
+    "description": "文字带着残影滑入，像声音在画面里留下尾迹。",
+    "usage": ["情绪开场", "音乐标题", "观点回放"],
+    "type": "echo",
+    "mechanism": "motion afterimage"
+  },
+  {
+    "english": "Radial Spin",
+    "chinese": "放射旋入",
+    "word": "RADIAL",
+    "description": "字符沿圆周旋转归位，形成向中心聚焦的入场。",
+    "usage": ["主题揭晓", "章节开场", "焦点收束"],
+    "type": "radial",
+    "mechanism": "orbit to center"
+  },
+  {
+    "english": "Wave Fold",
+    "chinese": "波浪折叠",
+    "word": "WAVE FOLD",
+    "description": "字符像纸面起伏一样翻折，带出柔和的节奏变化。",
+    "usage": ["情绪转场", "生活方式", "柔性标题"],
+    "type": "wave",
+    "mechanism": "folding rhythm"
+  },
+  {
+    "english": "Slice Shuffle",
+    "chinese": "切片重组",
+    "word": "SHUFFLE",
+    "description": "文字被切成错位片段，再迅速拼回完整标题。",
+    "usage": ["快节奏剪辑", "信息重组", "转场标题"],
+    "type": "slice",
+    "mechanism": "offset pieces"
+  },
+  {
+    "english": "Glow Pulse",
+    "chinese": "光晕脉冲",
+    "word": "PULSE",
+    "description": "标题由暗到亮周期呼吸，把注意力推向关键词。",
+    "usage": ["重点提示", "品牌口号", "夜景氛围"],
+    "type": "glow",
+    "mechanism": "breathing emphasis"
+  },
+  {
+    "english": "Shadow Split",
+    "chinese": "影分离",
+    "word": "SPLIT",
+    "description": "文字与影子短暂错位，再合并成清晰的视觉重心。",
+    "usage": ["悬念标题", "人物观点", "冲突表达"],
+    "type": "shadow",
+    "mechanism": "offset shadow"
+  },
+  {
+    "english": "Gravity Drop",
+    "chinese": "重力坠落",
+    "word": "GRAVITY",
+    "description": "字符从高处坠下后回弹，制造有重量的落点。",
+    "usage": ["结论落点", "强观点", "节奏卡点"],
+    "type": "gravity",
+    "mechanism": "weighted landing"
+  },
+  {
+    "english": "Pixel Dust",
+    "chinese": "像素聚散",
+    "word": "PIXEL DUST",
+    "description": "字符从像素尘点里聚合，再稳定成完整信息。",
+    "usage": ["数字内容", "AI 生成", "数据可视化"],
+    "type": "pixel",
+    "mechanism": "digital particles"
+  },
+  {
+    "english": "Mirror Flip",
+    "chinese": "镜像翻转",
+    "word": "MIRROR",
+    "description": "文字从镜像状态翻转回来，像视角被瞬间校正。",
+    "usage": ["反转观点", "对照内容", "前后变化"],
+    "type": "mirror",
+    "mechanism": "reversed to readable"
+  },
+  {
+    "english": "Rubber Bounce",
+    "chinese": "弹性回弹",
+    "word": "BOUNCE",
+    "description": "文字被拉扯后快速回弹，形成轻快但有控制的动势。",
+    "usage": ["轻松开场", "互动提示", "活泼标题"],
+    "type": "rubber",
+    "mechanism": "elastic settle"
+  }
+]
+
