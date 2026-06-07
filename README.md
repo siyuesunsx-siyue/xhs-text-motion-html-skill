@@ -1,4 +1,4 @@
-# xhs-text-motion-html-skill
+﻿# xhs-text-motion-html-skill
 
 一个用于生成小红书 9:16 HTML 文字动效页面的 Codex Skill。
 
@@ -100,11 +100,12 @@ scripts/render-html-to-mp4.mjs
 
 我是一个 all in 在 AI 学习和应用方向的爱好者，主要方向在个人工作提效、内容创作领域等。
 
-现在建立了一个 199 元的年度社群，有兴趣就加入一起探索！
+现在建立了一个 99 元的年度社群，有兴趣就加入一起探索！
 
 微信号：
 
 ```text
 sx18652268625
 ```
+
 
