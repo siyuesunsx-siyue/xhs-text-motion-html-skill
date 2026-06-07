@@ -25,6 +25,12 @@ To generate a default demo immediately:
 node scripts/create-text-motion-html.mjs --out output/index.html
 ```
 
+To render the generated HTML to MP4 in PowerShell:
+
+```powershell
+node scripts/render-html-to-mp4.mjs --html output/index.html --out output/motion-effects.mp4
+```
+
 Optional color overrides:
 
 ```bash
@@ -122,6 +128,8 @@ When finished, provide:
 
 - Path to the generated HTML.
 - How to preview it in a browser.
-- If rendering is needed, give a terminal command if a render script exists.
+- Tell the user to render in PowerShell themselves, and provide the exact command:
+  `node scripts/render-html-to-mp4.mjs --html <html-path> --out <mp4-path>`.
 - Mention any effects that were mapped to built-in fallback types.
 
+Do not silently render for the user unless they explicitly ask. The default workflow is: generate HTML, then provide the PowerShell render command.
