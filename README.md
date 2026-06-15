@@ -1,87 +1,66 @@
-﻿# xhs-text-motion-html-skill
+# xhs-text-motion-html-skill
 
-一个用于生成小红书 9:16 HTML 文字动效页面的 Codex Skill。
+一个用于制作小红书 9:16 HTML 文字动效视频的 Codex / AI Agent Skill。
 
-关键词：
+它沉淀的是一套固定方法：Swiss 极简版式、中心文字主视觉、每页一个文字动效、底板色彩轮播、HTML 预览、视频渲染命令、配乐与封面发布建议。
 
-```text
-xhs-text-motion-html-skill
-Xiaohongshu
-小红书
-9:16 HTML
-text motion
-文字动效
-Codex skill
-HTML 动画
-内容创作
-```
+## 适用场景
 
-## 这个 Skill 能做什么
+- 做一组 10 个或 12 个文字动效
+- 制作小红书 / 抖音 / Reels 竖屏文字动效视频
+- 用 HTML + CSS/JS/GSAP 生成可渲染的 9:16 动画页面
+- 让 AI agent 按固定结构继续制作新的 Vol.
 
-它可以生成和我之前做的小红书文字动效视频类似的 HTML 页面：
+## 标准流程
 
-- 固定 1080 x 1920 画布
-- 每组默认 10 页
-- 每页展示 1 种文字动效
-- 每页包含英文动效名、中文名、效果描述、适用场景
-- 版式、字体、字号、页面结构、时间节奏都已固化
-- 支持自定义底板颜色
-- 支持自定义 10 个文字动效配置
-- 生成 HTML 后，可继续用脚本渲染成 MP4
+1. 设定动效数量  
+   默认推荐 `12` 个，也可以指定 `10` 个或任意数量。
 
-## 快速生成 HTML
+2. 设定背景板色彩  
+   用户可以直接提供色号，也可以让 agent 根据主题推荐 2-3 个色号，并说明这组颜色的创意主题。
 
-```powershell
-node scripts/create-text-motion-html.mjs --out output/index.html
-```
+3. 制作 HTML  
+   每页只让中间的英文主视觉大字展示核心文字动效，其余文字只做克制辅助入场。
 
-生成后，用浏览器打开：
+4. 输出交付内容  
+   - HTML 预览地址或本地路径
+   - 本组文字动效简介表
+   - 终端渲染视频命令
+   - 剪映搜索背景音乐关键词
+   - 封面制作建议
+   - 社交媒体发布提醒
 
-```text
-output/index.html
-```
+## 页面结构
 
-## 自定义底板颜色
+每一页固定包含：
 
-```powershell
-node scripts/create-text-motion-html.mjs --out output/index.html --primary "#5C6B73" --accent "#9D3D3F"
-```
+1. 顶部信息栏
+2. 英文动效分类名
+3. 主视觉英文大字
+4. 中文名
+5. `视觉效果：...`
+6. 3 个适用场景标签
+7. 底部信息栏
 
-## 渲染成 MP4
+最重要的原则：只有主视觉英文大字负责展示核心动效。
 
-生成 HTML 后，在 PowerShell 中执行：
+## 可选脚本
+
+仓库包含一个轻量生成器：
 
 ```powershell
-node scripts/render-html-to-mp4.mjs --html output/index.html --out output/motion-effects.mp4
+node scripts/create-text-motion-html.mjs --effects effects.json --count 12 --out output/index.html --primary "#DDE7E3" --accent "#2F6F7E" --third "#D8A45F" --series "Guizang Motion" --volume "Vol.13"
 ```
 
-注意：渲染需要本机安装 Chrome 或 Edge，并且需要 `ffmpeg` 可用。
-
-## 自定义 10 个文字动效
-
-可以准备一个 JSON 文件：
-
-```json
-[
-  {
-    "english": "Echo Trail",
-    "chinese": "回声拖影",
-    "word": "ECHO TRAIL",
-    "description": "文字带着残影滑入，像声音在画面里留下尾迹。",
-    "usage": ["情绪开场", "音乐标题", "观点回放"],
-    "type": "echo",
-    "mechanism": "motion afterimage"
-  }
-]
-```
-
-然后执行：
+也可以渲染成 MP4：
 
 ```powershell
-node scripts/create-text-motion-html.mjs --effects my-effects.json --out output/index.html
+node scripts/render-html-to-mp4.mjs --html output/index.html --out output/motion-effects.mp4 --duration 26.4 --fps 30
 ```
 
-## 已包含内容
+渲染需要本机安装 Chrome 或 Edge，并且 `ffmpeg` 在 PATH 中可用。
+
+## 包含文件
 
 ```text
 SKILL.md
@@ -94,18 +73,4 @@ scripts/create-text-motion-html.mjs
 scripts/render-html-to-mp4.mjs
 ```
 
-其中 `references/motion-effects-registry.md` 记录了前 5 组已经做过的 50 个文字动效，用来避免后续重复。
-
-## 关于我
-
-我是一个 all in 在 AI 学习和应用方向的爱好者，主要方向在个人工作提效、内容创作领域等。
-
-现在建立了一个 99 元的年度社群，有兴趣就加入一起探索！
-
-微信号：
-
-```text
-sx18652268625
-```
-
-
+`references/motion-effects-registry.md` 用来记录已经做过的文字动效，后续制作新组时要先读取它，避免重复。

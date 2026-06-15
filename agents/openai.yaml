@@ -1,9 +1,8 @@
 interface:
   display_name: "XHS Text Motion HTML"
-  short_description: "Generate fixed-layout 9:16 text motion HTML"
-  brand_color: "#9D3D3F"
-  default_prompt: "Use $xhs-text-motion-html to create a 10-page Xiaohongshu text-motion HTML demo."
+  short_description: "Create 9:16 Xiaohongshu HTML text-motion videos"
+  brand_color: "#2F6F7E"
+  default_prompt: "Use $xhs-text-motion-html to create a 12-page Xiaohongshu HTML text-motion video with a coherent color theme."
 
 policy:
   allow_implicit_invocation: true
-

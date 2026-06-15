@@ -1,135 +1,136 @@
 ---
 name: xhs-text-motion-html
-description: Generate Xiaohongshu-ready 1080x1920 HTML text-motion demo videos in the same fixed layout, typography, timing, page structure, and motion-explanation format as the prior Codex-produced text effects series. Use when the user asks to create a 9:16 HTML text effects deck/video, a new group of 10 text motion effects, or a reusable motion-effects demo page.
+description: Create Xiaohongshu-ready 9:16 HTML text-motion videos: fixed Swiss layout, 10/12/custom pages, user-provided or agent-suggested background colors, one text effect per page, HTML preview, render command, music-search keywords, cover guidance, and social-posting copy support. Use when the user asks for HTML文字动效, 小红书文字动效, 9:16 text motion, or a new group/volume of text-motion effects.
 ---
 
 # xhs-text-motion-html
 
-Use this skill to create a single-file 1080x1920 HTML text-motion demo deck for Xiaohongshu videos.
+Create a single-file `1080x1920` HTML text-motion deck for Xiaohongshu-style videos.
 
-The output must match the fixed system:
+The style is fixed: Swiss, minimal, centered, text-first. The large English word is the only element that demonstrates the motion. Everything else is supporting information.
 
-- 10 pages by default.
-- 9:16 canvas: `1080 x 1920`.
-- One effect per page.
-- Same page structure on every page.
-- Main English word demonstrates the effect itself.
-- Chinese name, one-sentence effect description, and usage tags appear as supporting content.
-- Fixed typography, sizing, layout rhythm, and timing.
+## Workflow
 
-## Fast Path
+1. Set effect count.
+   - Default to `12` if the user says “新一组”.
+   - Use `10`, `12`, or any user-specified count.
+   - Keep one effect per page.
 
-To generate a default demo immediately:
+2. Set background colors.
+   - If the user provides colors, use them directly.
+   - If not, suggest a coherent set, preferably 3 colors.
+   - Explain the creative theme in plain Chinese, e.g. “海雾浅白 / 海峡蓝绿 / 航标金：来自海雾散开、航道恢复、航标亮起”.
+   - Pair text colors for contrast. For light plates use dark ink; for dark plates use off-white ink.
 
-```bash
-node scripts/create-text-motion-html.mjs --out output/index.html
-```
+3. Propose or create effects.
+   - Read `references/motion-effects-registry.md` when making a continuation, and avoid repeated names, mechanisms, and near-identical visual impressions.
+   - Each effect needs: sequence number, English name, Chinese name, main word, visual mechanism, 3 usage scenes, compact English mechanism phrase.
+   - If the user asks you to “直接制作”, proceed without waiting for approval.
 
-To render the generated HTML to MP4 in PowerShell:
+4. Make the HTML.
+   - One HTML file is enough unless the user asks for a full project.
+   - Use the fixed content contract in `references/effect-contract.md`.
+   - Use the fixed visual contract in `references/fixed-style.md`.
+   - The root composition must include:
+     - `data-composition-id`
+     - `data-duration`
+     - `data-width="1080"`
+     - `data-height="1920"`
+   - Register deterministic timeline data if using HyperFrames: `window.__timelines[compositionId] = tl`.
+   - Avoid `performance.now()` and `requestAnimationFrame()` in render-target compositions. Use timeline time, `?t=`, or `?renderMs=` frame seeking.
+
+5. Validate and preview.
+   - Confirm scene count equals the requested effect count.
+   - Confirm every scene has the same structure.
+   - Confirm no old volume names, old composition ids, or stale output paths remain.
+   - Provide a browser preview path or URL.
+
+## Fixed Page Structure
+
+Every page uses the same structure:
+
+1. Top info bar: left series name, right page number.
+2. English effect tag above the main word.
+3. Main English word in the center, largest text, demonstrating the core effect.
+4. Chinese name below the word.
+5. One-sentence description beginning with `视觉效果：`.
+6. Three short usage tags.
+7. Bottom info bar: left English effect name, right compact mechanism phrase.
+
+Do not add extra stickers, icons, cards, diagrams, ships, arrows, or explanatory graphics. The page should feel quiet and centered.
+
+## Motion Rules
+
+- Only the main English word performs the core animation.
+- Chinese name, description, tags, top bar, and bottom bar use restrained fade-up or page fade.
+- Page duration: about `2.2s`.
+- Timing:
+  - `0.00s-0.20s`: page fade in
+  - `0.10s-0.60s`: English effect tag fade-up
+  - `0.15s-1.05s`: main English word performs the effect
+  - `0.90s-1.30s`: Chinese name fade-up
+  - `1.05s-1.55s`: description fade-up
+  - `1.20s-1.75s`: usage tags fade-up
+  - final `0.30s`: page fade out
+
+## Visual Rules
+
+- Canvas: `1080x1920`.
+- Layout: centered Swiss composition with top and bottom metadata bars.
+- Background: use 2 or 3 solid plates, cycling by page.
+- Background texture: subtle dot grid, not a heavy line grid.
+- Text: high contrast, usually dark gray/black on light plates and off-white on dark plates.
+- Main word size: around `104px-126px`; increase when user asks for a stronger central word.
+- Avoid scattered elements. Keep the visual energy concentrated in the center.
+- Avoid in-app instructional copy. The HTML itself is the artifact, not a tutorial page.
+
+## Optional Generator
+
+This repository includes a lightweight generator:
 
 ```powershell
-node scripts/render-html-to-mp4.mjs --html output/index.html --out output/motion-effects.mp4
+node scripts/create-text-motion-html.mjs --effects effects.json --count 12 --out output/index.html --primary "#DDE7E3" --accent "#2F6F7E" --third "#D8A45F" --series "Guizang Motion" --volume "Vol.13"
 ```
 
-Optional color overrides:
-
-```bash
-node scripts/create-text-motion-html.mjs --out output/index.html --primary "#5C6B73" --accent "#9D3D3F"
-```
-
-Optional custom effects file:
-
-```bash
-node scripts/create-text-motion-html.mjs --effects my-effects.json --out output/index.html
-```
-
-If the user only asks for "a new group", first produce a candidate table and wait for confirmation unless they explicitly ask to directly generate.
-
-## Fixed Page Content Contract
-
-Each page contains exactly these parts:
-
-1. Topline: left series name, right page number.
-2. Effect tag: English label above the main word.
-3. Main English word: largest text, uses the page's core animation.
-4. Chinese name: `中文名：...`.
-5. Description: `效果：...`.
-6. Usage tags: 3 short scene labels.
-7. Footline: left English name, right compact mechanism phrase.
-
-Read `references/effect-contract.md` for the exact content and timing contract.
-
-## Fixed Visual Contract
-
-Use the fixed layout and typography from `references/fixed-style.md`.
-
-Do not:
-
-- Change the page structure.
-- Freely alter font sizes.
-- Add decorative elements unrelated to the text effect.
-- Use multiple layouts in one deck.
-- Turn the page into a PPT explanation of this skill.
-
-You may:
-
-- Change the two background colors if the user asks.
-- Change the 10 effects.
-- Change series name / volume label.
-- Keep the same fixed structure while implementing new motion mechanisms.
-
-## Deduplication
-
-When creating a continuation after the existing 5 groups, read:
-
-```text
-references/motion-effects-registry.md
-```
-
-Apply three-layer deduplication:
-
-1. Names must not repeat.
-2. Motion mechanisms must not repeat.
-3. The final visual impression must not be highly similar.
-
-If a proposed effect is close to an existing one, explain the difference before coding.
-
-## Effects JSON Shape
-
-Custom effect files must be an array of 10 objects:
+`effects.json` is an array whose length matches `--count`:
 
 ```json
 [
   {
-    "english": "Echo Trail",
-    "chinese": "回声拖影",
-    "word": "ECHO TRAIL",
-    "description": "文字带着残影滑入，像声音在画面里留下尾迹。",
-    "usage": ["情绪开场", "音乐标题", "观点回放"],
-    "type": "echo",
-    "mechanism": "motion afterimage"
+    "english": "Strait Open",
+    "chinese": "海峡打开",
+    "word": "STRAIT",
+    "description": "字符从狭窄中缓缓展开，像航道重新露出通行宽度。",
+    "usage": ["局势开场", "通道主题", "希望提示"],
+    "type": "scale",
+    "mechanism": "clear opening"
   }
 ]
 ```
 
-Supported built-in `type` values:
+Render helper:
 
-```text
-fade, rise, slide, scale, rotate, blur, echo, radial, wave, slice,
-glow, shadow, gravity, pixel, mirror, rubber, scan, crop, counter,
-page, underline, cursor
+```powershell
+node scripts/render-html-to-mp4.mjs --html output/index.html --out output/motion-effects.mp4 --duration 26.4 --fps 30
 ```
 
-For unsupported types, implement a new branch in the generated HTML animation logic or map to the closest built-in type only after explaining the tradeoff.
+You may also write the HTML manually when custom motion quality matters more than generator coverage.
 
-## Delivery Requirements
+## Final Response Checklist
 
-When finished, provide:
+When finished, output:
 
-- Path to the generated HTML.
-- How to preview it in a browser.
-- Tell the user to render in PowerShell themselves, and provide the exact command:
-  `node scripts/render-html-to-mp4.mjs --html <html-path> --out <mp4-path>`.
-- Mention any effects that were mapped to built-in fallback types.
+1. HTML preview address or absolute local path.
+2. The effect table:
+   - sequence number
+   - English name
+   - Chinese name
+   - visual mechanism
+   - usage scenes
+3. Next actions for the user:
+   - Terminal render command to turn the HTML into video.
+   - Background-music search keywords based on the color theme, and tell the user to search in Jianying/CapCut, combine, and export.
+   - Cover-image guidance: recommend using ChatGPT or another image tool to create the cover from the color theme and series topic.
+   - Social-posting reminder: include the effect table or a shortened version of it in the post body.
 
-Do not silently render for the user unless they explicitly ask. The default workflow is: generate HTML, then provide the PowerShell render command.
+Keep the final response concise and practical.

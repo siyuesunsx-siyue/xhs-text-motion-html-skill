@@ -26,15 +26,21 @@ const effectsPath = args.get("effects")
   : path.join(skillRoot, "assets", "default-effects.json");
 
 const effects = JSON.parse(fs.readFileSync(effectsPath, "utf8"));
-if (!Array.isArray(effects) || effects.length !== 10) {
-  throw new Error("Effects file must be an array of exactly 10 effects.");
+const requestedCount = Number(args.get("count") || effects.length || 12);
+if (!Array.isArray(effects) || effects.length !== requestedCount) {
+  throw new Error(`Effects file must be an array of exactly ${requestedCount} effects.`);
 }
 
-const primary = args.get("primary") || "#5C6B73";
-const accent = args.get("accent") || "#9D3D3F";
+const colorsArg = args.get("colors");
+const colors = colorsArg
+  ? colorsArg.split(",").map((item) => item.trim()).filter(Boolean)
+  : [];
+const primary = colors[0] || args.get("primary") || "#DDE7E3";
+const accent = colors[1] || args.get("accent") || "#2F6F7E";
+const third = colors[2] || args.get("third") || "#D8A45F";
 const series = args.get("series") || "Text Motion Library";
 const volume = args.get("volume") || "Vol.1";
-const duration = 2.25;
+const duration = Number(args.get("page-duration") || 2.2);
 const totalDuration = Number((effects.length * duration).toFixed(2));
 
 const esc = (value) => String(value ?? "")
@@ -44,7 +50,7 @@ const esc = (value) => String(value ?? "")
   .replaceAll('"', "&quot;");
 
 const sceneClass = (effect, index) => {
-  const plate = index % 2 === 1 ? "accent-plate" : "";
+  const plate = index % 3 === 1 ? "accent-plate" : (index % 3 === 2 ? "third-plate" : "");
   return ["scene", plate, `s-${index + 1}`, `fx-${effect.type || "fade"}`].filter(Boolean).join(" ");
 };
 
@@ -60,12 +66,12 @@ const sections = effects.map((effect, index) => {
   const usage = (effect.usage || []).slice(0, 3).map((item) => `<span>${esc(item)}</span>`).join("");
   return `
       <section class="${sceneClass(effect, index)}" data-type="${esc(effect.type || "fade")}">
-        <div class="topline"><span>${esc(series)} ${esc(volume)}</span><span>${no} / 10</span></div>
+        <div class="topline"><span>${esc(series)} ${esc(volume)}</span><span>${no} / ${String(effects.length).padStart(2, "0")}</span></div>
         <div class="scene-inner">
           <div class="effect-tag">${esc(effect.english)}</div>
           <div class="word ${sizeClass(effect.word)}" data-word="${esc(effect.word || effect.english)}"></div>
-          <div class="cn-name">中文名：${esc(effect.chinese)}</div>
-          <div class="desc">效果：${esc(effect.description)}</div>
+          <div class="cn-name">${esc(effect.chinese)}</div>
+          <div class="desc">视觉效果：${esc(effect.description)}</div>
           <div class="usage">${usage}</div>
         </div>
         <div class="footline"><span>${esc(effect.english)}</span><span>${esc(effect.mechanism || effect.type || "text motion")}</span></div>
@@ -88,11 +94,14 @@ const html = `<!doctype html>
         --h: 1920px;
         --primary: ${primary};
         --accent: ${accent};
+        --third: ${third};
         --accent-on: #f8eee9;
+        --third-on: #243038;
         --ink: #10181b;
         --muted: rgba(16, 24, 27, .66);
         --line: rgba(16, 24, 27, .24);
-        --grid: rgba(248, 238, 233, .12);
+        --dot: rgba(16, 24, 27, .16);
+        --dot-size: 2.2px;
         --font-ui: "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", sans-serif;
         --font-serif: "Times New Roman", Georgia, serif;
         --font-mono: "IBM Plex Mono", "JetBrains Mono", Consolas, monospace;
@@ -114,11 +123,7 @@ const html = `<!doctype html>
         height: var(--h);
         overflow: hidden;
         color: var(--ink);
-        background:
-          linear-gradient(var(--grid) 1px, transparent 1px),
-          linear-gradient(90deg, var(--grid) 1px, transparent 1px),
-          var(--primary);
-        background-size: 72px 72px, 72px 72px, auto;
+        background: var(--primary);
       }
 
       .scene {
@@ -135,11 +140,9 @@ const html = `<!doctype html>
         content: "";
         position: absolute;
         inset: 0;
-        background:
-          linear-gradient(var(--grid) 1px, transparent 1px),
-          linear-gradient(90deg, var(--grid) 1px, transparent 1px),
-          var(--primary);
-        background-size: 72px 72px, 72px 72px, auto;
+        background-color: var(--primary);
+        background-image: radial-gradient(circle, var(--dot) var(--dot-size), transparent calc(var(--dot-size) + 0.2px));
+        background-size: 48px 48px;
       }
 
       .scene::after {
@@ -154,14 +157,22 @@ const html = `<!doctype html>
       }
 
       .scene.accent-plate::before {
-        background:
-          linear-gradient(rgba(255, 255, 255, .14) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, .14) 1px, transparent 1px),
-          var(--accent);
-        background-size: 72px 72px, 72px 72px, auto;
+        background-color: var(--accent);
+        background-image: radial-gradient(circle, rgba(255, 255, 255, .2) var(--dot-size), transparent calc(var(--dot-size) + 0.2px));
+        background-size: 48px 48px;
       }
 
       .scene.accent-plate::after { border-color: rgba(255,255,255,.26); }
+
+      .scene.third-plate {
+        color: var(--third-on);
+      }
+
+      .scene.third-plate::before {
+        background-color: var(--third);
+        background-image: radial-gradient(circle, rgba(36, 48, 56, .16) var(--dot-size), transparent calc(var(--dot-size) + 0.2px));
+        background-size: 48px 48px;
+      }
 
       .topline, .footline {
         position: relative;
@@ -180,6 +191,12 @@ const html = `<!doctype html>
       .accent-plate .footline,
       .accent-plate .effect-tag {
         color: rgba(255,255,255,.68);
+      }
+
+      .third-plate .topline,
+      .third-plate .footline,
+      .third-plate .effect-tag {
+        color: rgba(36,48,56,.62);
       }
 
       .footline { font-size: 19px; }
@@ -258,6 +275,7 @@ const html = `<!doctype html>
       }
 
       .accent-plate .desc { color: rgba(255,255,255,.82); }
+      .third-plate .desc { color: rgba(36,48,56,.74); }
 
       .usage {
         display: flex;
@@ -281,12 +299,28 @@ const html = `<!doctype html>
         color: rgba(255,255,255,.86);
       }
 
+      .third-plate .usage span {
+        border-color: rgba(36,48,56,.18);
+        background: rgba(255,255,255,.12);
+        color: rgba(36,48,56,.78);
+      }
+
       html.render-frame .scene,
       html.render-frame .scene * { animation: none !important; }
     </style>
   </head>
   <body>
-    <div id="video">
+    <div
+      id="video"
+      data-composition-id="${esc((series + "-" + volume).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "xhs-text-motion")}"
+      data-start="0"
+      data-duration="${totalDuration}"
+      data-width="1080"
+      data-height="1920"
+      data-layout-id="S01_STEP_BREAKDOWN"
+      data-system="Swiss"
+      data-components="title,step,tag"
+    >
 ${sections}
     </div>
 
